@@ -4,6 +4,7 @@ php:
 branches:
   only:
     - master
+    - UltimateRank
     - travis-ci
 
 sudo: required
