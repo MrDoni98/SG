@@ -5,7 +5,7 @@ use pocketmine\Server;
 use pocketmine\Player;
 
 use pocketmine\level\sound\AnvilUseSound;
-use pocketmine\level\sound\LaunchSound;
+use pocketmine\level\sound\AnvilFallSound;
 use ImagicalGamer\SurvivalGames\Main;
 
 use pocketmine\level\Level;
@@ -60,7 +60,7 @@ class GameSender extends PluginTask{
                 }
                 if($tts == 15 || $tts == 10 || $tts == 5 || $tts == 4 || $tts == 3 || $tts == 2 || $tts == 1){
                     foreach($lev->getPlayers() as $p){
-                        $lev->addSound(new LaunchSound($p);
+                        $lev->addSound(new AnvilFallSound($p);
                         $p->sendMessage($this->plugin->format . "Starting in " . $tts . "...");
                     }
                 }
