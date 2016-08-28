@@ -28,14 +28,13 @@ class SurvivalGamesCommand extends BaseCommand{
             $sender->sendMessage(C::RED . "Please run in-game!");
             return false;
         }
-        if($args[0] == 0){
-            $sender->sendMessage(C::RED . "Usage: /sg <argument>");
-            return false;
-        }
-        if($args[0] == "create"){
-            if(!($args[1] == 0)){
+        switch($args){
+            case(empty($args[0])):
+                $sender->sendMessage(C::RED."Usage: /sg create <arena>");
+                break;
+            case($args[0] == "create"):
                 $this->plugin->newArena($sender, $args[1]);
-            }
+                break;
         }
     }
 }
