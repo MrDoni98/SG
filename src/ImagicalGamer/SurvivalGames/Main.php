@@ -78,7 +78,7 @@ class Main extends PluginBase implements Listener{
     chmod("/arenas.json",0777);
   }
 
-  public function newArena(Player $player, String $lv){
+  public function newArena(Player $player, String $lv, Integer $num){
     if($this->isArena($lv)){
       $player->sendMessage(C::RED . "Theres already an arena in level " . $lv . "!");
       return false;
@@ -91,6 +91,8 @@ class Main extends PluginBase implements Listener{
     $lev = $this->getServer()->getLevelByName($lv);
     $player->teleport($this->getServer()->getLevelByName($lv)->getSafeSpawn(),0,0);
     $this->current_lev = $lv;
+    $cfg = new Config($this->getDataFolder() . "/arenas.json", Config::JSON);
+    $cfg->set($lv. "MaxPlayer", $num);
     $player->setGamemode(1);
     $player->sendMessage($this->prefix . "Your about to register an arena! Tap a block to set a spawn!");
     $this->mode = 1;
@@ -99,6 +101,12 @@ class Main extends PluginBase implements Listener{
 
   public function minPlayer(){
     return 2;
+  }
+
+  public function maxPlayer(String $arena){
+    $cfg = new Config($this->getDataFolder() . "/arenas.json", Config::JSON);
+    $maxPlayer = $cfg->get($arena . "MaxPlayer");
+    return $maxPlayer;
   }
 
   public function isArena(String $arena){
