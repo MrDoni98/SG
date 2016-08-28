@@ -117,52 +117,52 @@ class EventListener extends PluginBase implements Listener{
   	$player = $event->getPlayer();
   	$blk = $event->getBlock();
   	$tile = $player->getLevel()->getTile($blk);
+  	$Slots = $this->plugin->slots;
   	if($tile instanceof Sign){
-  		if($this->plugin->mode == 26){
-  			$tile->setText($this->plugin->joinText, C::AQUA . "0 / 24", $this->plugin->current_lev, $this->plugin->prefix);
-			  $this->plugin->mode = 0;
-			  $player->sendMessage($this->plugin->prefix . "Arena Registered!");
-        $this->plugin->addArena($this->plugin->current_lev);
-        $this->plugin->current_lev = "";
+  		if($this->plugin->mode == $Slots+2){
+  			$tile->setText($this->plugin->joinText, C::AQUA . "0 / " . $Slots, $this->plugin->current_lev, $this->plugin->prefix);
+			$this->plugin->mode = 0;
+			$player->sendMessage($this->plugin->prefix . "Arena Registered!");
+                        $this->plugin->addArena($this->plugin->current_lev);
+                        $cfg->set($lv. "MaxPlayer", $Slots);
+                        $this->plugin->current_lev = "";
   		}
   		else{
   			$txt = $tile->getText();
-  			if($txt[0] == $this->plugin->joinText){
+  			if($txt[0] == $this->plugin->joinText){ //[JOIN]
   				if($txt[3] == $this->plugin->prefix){
   				$cfg = new Config($this->getDataFolder() . "/arenas.json", Config::JSON);
   				$level = $this->plugin->getServer()->getLevelByName($txt[2]);
-					$aop = count($level->getPlayers());
-					$thespawn = $cfg->get($txt[2] . "Spawn" . ($aop+1));
-					$spawn = new Position($thespawn[0]+0.5,$thespawn[1],$thespawn[2]+0.5,$level);
-					$level->loadChunk($spawn->getFloorX(), $spawn->getFloorZ());
-					$player->teleport($spawn,0,0);
-					$player->setGamemode(0);
-					$player->getInventory()->clearAll();
-          $player->setHealth($player->getMaxHealth());
-          $player->sendMessage($this->plugin->prefix . "You have Successfully Joined a Match!");
+				$aop = count($level->getPlayers());
+				$thespawn = $cfg->get($txt[2] . "Spawn" . ($aop+1));
+				$spawn = new Position($thespawn[0]+0.5,$thespawn[1],$thespawn[2]+0.5,$level);
+				$level->loadChunk($spawn->getFloorX(), $spawn->getFloorZ());
+				$player->teleport($spawn,0,0);
+				$player->setGamemode(0);
+				$player->getInventory()->clearAll();
+                                $player->setHealth($player->getMaxHealth());
+                                $player->sendMessage($this->plugin->prefix . "You have Successfully Joined a Match!");
   				}
   			}
-      }
-    }
-  			else if($this->plugin->mode >= 1 && $this->plugin->mode <= 24){
-  				$cfg = new Config($this->getDataFolder() . "/arenas.json", Config::JSON);
-			    $cfg->set($this->plugin->current_lev . "Spawn" . $this->plugin->mode, array($blk->getX(),$blk->getY()+1,$blk->getZ()));
-			    $player->sendMessage($this->plugin->prefix . "Spawn " . $this->plugin->mode . " has been registered!");
-			    $this->plugin->mode++;
-			    if($this->plugin->mode == 25){
-                   $player->sendMessage($this->plugin->prefix . "Now tap on a deathmatch spawn.");
-			    }
-			    $cfg->save();
-  			}
-  			else if($this->plugin->mode == 25){
-  				$cfg = new Config($this->getDataFolder() . "/arenas.json", Config::JSON);
-			    $cfg->set($this->plugin->current_lev . "DeathMatch", array($blk->getX(),$blk->getY()+1,$blk->getZ()));
-			    $spawn = $this->plugin->getServer()->getDefaultLevel()->getSafeSpawn();
-			    $this->plugin->getServer()->getDefaultLevel()->loadChunk($spawn->getFloorX(), $spawn->getFloorZ());
-			    $player->teleport($spawn,0,0);
-			    $player->sendMessage($this->plugin->prefix . "You've been teleported back. Tap a sign to register it for the arena!");
-			    $this->plugin->mode = 26;
-			    $cfg->save();
-  			}
-  		}
+                }
+        }elseif($this->plugin->mode >= 1 && $this->plugin->mode <= $Slots){
+        	$cfg = new Config($this->getDataFolder() . "/arenas.json", Config::JSON);
+		$cfg->set($this->plugin->current_lev . "Spawn" . $this->plugin->mode, array($blk->getX(),$blk->getY()+1,$blk->getZ()));
+		$player->sendMessage($this->plugin->prefix . "Spawn " . $this->plugin->mode . " has been registered!");
+		$this->plugin->mode++;
+		if($this->plugin->mode == $Slots+1){
+			$player->sendMessage($this->plugin->prefix . "Now tap on a deathmatch spawn.");
+		}
+		$cfg->save();
+        }elseif($this->plugin->mode == $Slots+1){
+        	$cfg = new Config($this->getDataFolder() . "/arenas.json", Config::JSON);
+		$cfg->set($this->plugin->current_lev . "DeathMatch", array($blk->getX(),$blk->getY()+1,$blk->getZ()));
+		$spawn = $this->plugin->getServer()->getDefaultLevel()->getSafeSpawn();
+		$this->plugin->getServer()->getDefaultLevel()->loadChunk($spawn->getFloorX(), $spawn->getFloorZ());
+		$player->teleport($spawn,0,0);
+		$player->sendMessage($this->plugin->prefix . "You've been teleported back. Tap a sign to register it for the arena!");
+		$this->plugin->mode = $Slots+2;
+		$cfg->save();
+  	}
   }
+}
