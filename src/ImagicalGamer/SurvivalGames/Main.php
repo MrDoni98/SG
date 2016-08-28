@@ -31,6 +31,7 @@ use pocketmine\tile\Chest;
 class Main extends PluginBase implements Listener{
 
   public $mode = 0;
+  public $slots = 0;
   public $prefix;
   public $format;
   public $current_lev = "";
@@ -92,7 +93,7 @@ class Main extends PluginBase implements Listener{
     $player->teleport($this->getServer()->getLevelByName($lv)->getSafeSpawn(),0,0);
     $this->current_lev = $lv;
     $cfg = new Config($this->getDataFolder() . "/arenas.json", Config::JSON);
-    $cfg->set($lv. "MaxPlayer", $num);
+    $this->slots = $num;
     $player->setGamemode(1);
     $player->sendMessage($this->prefix . "Your about to register an arena! Tap a block to set a spawn!");
     $this->mode = 1;
