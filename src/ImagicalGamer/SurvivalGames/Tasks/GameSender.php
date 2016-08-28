@@ -4,6 +4,8 @@ namespace ImagicalGamer\SurvivalGames\Tasks;
 use pocketmine\Server;
 use pocketmine\Player;
 
+use pocketmine\level\sound\AnvilUseSound;
+use pocketmine\level\sound\LaunchSound;
 use ImagicalGamer\SurvivalGames\Main;
 
 use pocketmine\level\Level;
@@ -58,6 +60,7 @@ class GameSender extends PluginTask{
                 }
                 if($tts == 15 || $tts == 10 || $tts == 5 || $tts == 4 || $tts == 3 || $tts == 2 || $tts == 1){
                     foreach($lev->getPlayers() as $p){
+                        $lev->addSound(new LaunchSound($p);
                         $p->sendMessage($this->plugin->format . "Starting in " . $tts . "...");
                     }
                 }
@@ -84,6 +87,7 @@ class GameSender extends PluginTask{
                 if($tm == 779){
                     foreach($lev->getPlayers() as $p){
                         $p->sendMessage($this->plugin->format . "Match has Started!\n You have 30 seconds of Invincibility!");
+                        $lev->addSound(new AnvilUseSound($p);
                     }
                 }
                 else if($tm > 749){
