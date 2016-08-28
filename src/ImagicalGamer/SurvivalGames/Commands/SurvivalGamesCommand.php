@@ -33,7 +33,7 @@ class SurvivalGamesCommand extends BaseCommand{
                 $sender->sendMessage(C::RED."Usage: /sg create <arena>");
                 break;
             case($args[0] == "create"):
-                $this->plugin->newArena($sender, $args[1]);
+                $this->plugin->newArena($sender, $args[1], $args[2]);
                 break;
         }
     }
